@@ -64,7 +64,7 @@
       <div class="col-lg-6 col-lg-offset-3">
         <form role="form" ng-submit="results.search()" id="searchForm">
           <div class="form-group">
-            <input type="text" class="form-control" id="searchQuery" placeholder="Choose medical concepts to search patients">
+            <input type="text" class="form-control" id="searchQuery" placeholder="Search case studies using medical concepts">
             <div class="text-center">
               <!--
               <input type="radio" name="search_type" id="advanced" value="advanced" checked="true"> <label for="advanced">Advanced</label>
@@ -95,7 +95,7 @@
               <span style="text-transform: capitalize;"><h4 class="label label-primary">{{category}}</h4></span>
               <ul style="padding: 0.3em 0 0.5em 0.8em; list-style-type: none; line-height: normal;">
                 <li ng-repeat="concept in concepts" style="font-size: smaller; padding-bottom: 5px;">
-                  {{concept.label}}
+                  <a href="" ng-click="results.addConcept(concept.cui, concept.label)">{{concept.label}}</a>
                 </li>
               </ul>
             </div>
@@ -147,7 +147,6 @@
     });
 
     $(document).on("change", function(){
-      console.log("changed!")
       $("#searchButton").click();
     });
 

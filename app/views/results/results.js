@@ -18,8 +18,13 @@ app.controller('ResultsController', [function($scope) {
     return b.count - a.count;
   }
 
+  self.addConcept = function(cui, label) {
+    var data = $("#searchQuery").select2("data");
+    data.push({id: cui, text: label});
+    $("#searchQuery").select2("data", data);
+  }
+
   self.search = function() {
-    console.log("search!")
     var cuis = $("#searchQuery").select2("val");
     $.ajax({
       url: "http://198.199.104.222:9200/medhack/_search",
