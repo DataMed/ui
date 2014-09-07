@@ -24,35 +24,70 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
-  <div class="container-fluid">
+  <div style="float: right; padding: 1em;">
+    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">About</button>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">About DataMed</h4>
+          </div>
+          <div class="modal-body">
+            DataMed is a proof-of-concept project that improves upon simple keyword search for medical documents.
+            It was produced as a part of Prebacked's <a href="http://www.prebacked.com/medhack/san-francisco-summer-2014">MedHack SF Summer 2014</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" ng-controller="ResultsController as results">
     <div class="row">
       <div class="col-md-12 text-center">
-        <h1>Patient Search</h1>
+        <h1><img src="DataMed.png" width=400></h1>
       </div>
       <div class="col-lg-6 col-lg-offset-3">
-        <form role="form">
+        <form role="form" ng-submit="results.search()" id="searchForm">
           <div class="form-group">
-            <input type="text" class="form-control" id="searchQuery" placeholder="Patient search query">
+            <input type="text" class="form-control" id="searchQuery" placeholder="Choose medical concepts to search patients">
             <div class="text-center">
+              <!--
               <input type="radio" name="search_type" id="advanced" value="advanced" checked="true"> <label for="advanced">Advanced</label>
               <input type="radio" name="search_type" id="keyword" value="keyword"> <label for="keyword">Keyword</label>
+              -->
+              <input type="submit" style="margin-top: 5px;" id="searchButton" value="Search">
             </div>
           </div>
         </form>
       </div>
     </div>
+    <div class="row" ng-show="results.results">
+      <div class="col-lg-8 col-lg-offset-1">
+        <div id="results">
+          <div ng-repeat="result in results.results">
+            <search-results></search-results>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2" ng-show="results.related">
+        <div class="panel panel-primary">
+          <div class="panel-heading">Related</div>
+          <div class="panel-body">
+            <div ng-repeat="(category, concepts) in results.related">
+              <span style="text-transform: capitalize;"><h4 class="label label-primary">{{category}}</h4></span>
+              <div style="padding: 0.3em 0 0.5em 0.5em;">
+                <div ng-repeat="concept in concepts" style="font-size: smaller;">
+                  {{concept.label}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-<!--
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul>
-
-  <div ng-view></div>
-
-  <div>Angular seed app: v<span app-version></span></div>
--->
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
@@ -62,34 +97,43 @@
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="app.js"></script>
-  <script src="labels.js"></script>
-  <script src="views/view1/view1.js"></script>
-  <script src="views/view2/view2.js"></script>
+  <script src="views/results/results.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
 
   <script>
-    // $.getJSON('labels.json', function(data) {
-      console.log("test")
-      console.log(labelsForSelect)
-      // var formattedData = [];
-      // for (var i = 0; i < data.length; i++) {
-      //   var cuiLabel = data[i].split("\t");
-      //   var cui = cuiLabel[0];
-      //   var label = cuiLabel[1];
-      //   formattedData.push({id: cui, text: label});
-      // }
+    $("#searchQuery").select2({
+      minimumInputLength: 2,
+      multiple: true,
+      ajax: {
+        url: "http://198.199.104.222:9200/recommend/_suggest",
+        dataType: 'json',
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        data: function (term, page) {
+          return JSON.stringify({
+            "label-suggest": {
+              text: term,
+              completion: {
+                field: "label"
+              }
+            }
+          });
+        },
+        results: function (data, page) {
+          var results = data["label-suggest"][0]["options"];
+          results = results.map(function(hit){return {id: hit.payload.cui, text: hit.text}});
+          return { results: results };
+        }
+      }
+    });
 
-      // console.log(formattedData)
+    $(document).on("change", function(){
+      console.log("changed!")
+      $("#searchButton").click();
+    });
 
-      $("#searchQuery").select2({
-        placeholder: "Choose medical concepts to search patients",
-        minimumInputLength: 1,
-        multiple: true,
-        data: [{id: 1, text: "12345"}]
-      });
-    // })
   </script>
 </body>
 </html>
