@@ -35,7 +35,13 @@
           </div>
           <div class="modal-body">
             DataMed is a proof-of-concept project that improves upon simple keyword search for medical documents.
-            It was produced as a part of Prebacked's <a href="http://www.prebacked.com/medhack/san-francisco-summer-2014">MedHack SF Summer 2014</a>
+            To search, simply start typing a medical concept of interest into the search box. Select
+            DataMed was produced as a part of Prebacked's <a href="http://www.prebacked.com/medhack/san-francisco-summer-2014">MedHack SF Summer 2014</a>.
+            <h4>Team</h4>
+            <a href="http://lexigram.io">Paul Alexander</a><br>
+            <a href="https://www.linkedin.com/pub/prag-batra/4a/9a2/431">Prag Batra</a><br>
+            <a href="https://www.linkedin.com/in/nickylim888/">Nicole Lim</a><br>
+            <a href="http://lexigram.io">Manuel Salvadores</a><br>
           </div>
         </div>
       </div>
@@ -76,11 +82,11 @@
           <div class="panel-body">
             <div ng-repeat="(category, concepts) in results.related">
               <span style="text-transform: capitalize;"><h4 class="label label-primary">{{category}}</h4></span>
-              <div style="padding: 0.3em 0 0.5em 0.5em;">
-                <div ng-repeat="concept in concepts" style="font-size: smaller;">
+              <ul style="padding: 0.3em 0 0.5em 0.8em; list-style-type: none; line-height: normal;">
+                <li ng-repeat="concept in concepts" style="font-size: smaller; padding-bottom: 5px;">
                   {{concept.label}}
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

@@ -14,12 +14,16 @@ app.controller('ResultsController', [function($scope) {
   self.results = [];
   self.related = null;
 
+  self.articleSort = function(a, b) {
+    return b.count - a.count;
+  }
+
   self.search = function() {
     console.log("search!")
     var cuis = $("#searchQuery").select2("val");
     $.ajax({
       url: "http://198.199.104.222:9200/medhack/_search",
-      data: {q: cuis.join(" ")},
+      data: {q: cuis.join("+")},
       dataType: 'json',
       success: function(data) {
         self.results = data["hits"]["hits"].map(function(hit){return {
@@ -32,7 +36,7 @@ app.controller('ResultsController', [function($scope) {
     });
     $.ajax({
       url: "http://198.199.104.222:9200/terms/_search",
-      data: {q: cuis.join(" ")},
+      data: {q: cuis.join("+"), size: 500},
       dataType: 'json',
       success: function(data) {
         var hits = data["hits"]["hits"].map(function(hit){return hit["_source"]});
@@ -45,11 +49,16 @@ app.controller('ResultsController', [function($scope) {
               if (categories[term.sty] === undefined) {
                 categories[term.sty] = [];
               }
-              categories[term.sty].push(term);
+              categories[term.sty].push($.extend(term, {count: parseInt(hit.articles)}));
             }
           }
         }
-        console.log(categories)
+
+        // Sort by article frequency
+        $.each(categories, function(key, value){
+          categories[key] = categories[key].sort(self.articleSort).slice(0, 9);
+        });
+
         self.related = categories;
       }
     });
