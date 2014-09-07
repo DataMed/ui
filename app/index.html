@@ -15,34 +15,81 @@
   <link rel="stylesheet" href="spacelab/css/bootstrap.css">
   <link rel="stylesheet" href="spacelab/css/bootstrap-theme.css">
   <link rel="stylesheet" href="app.css"/>
+  <link rel="stylesheet" href="bower_components/select2/select2.css">
+  <link rel="stylesheet" href="select2-bootstrap.css"/>
   <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h1>Patient Search</h1>
+      </div>
+      <div class="col-lg-6 col-lg-offset-3">
+        <form role="form">
+          <div class="form-group">
+            <input type="text" class="form-control" id="searchQuery" placeholder="Patient search query">
+            <div class="text-center">
+              <input type="radio" name="search_type" id="advanced" value="advanced" checked="true"> <label for="advanced">Advanced</label>
+              <input type="radio" name="search_type" id="keyword" value="keyword"> <label for="keyword">Keyword</label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!--
   <ul class="menu">
     <li><a href="#/view1">view1</a></li>
     <li><a href="#/view2">view2</a></li>
   </ul>
 
-  <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
-
   <div ng-view></div>
 
   <div>Angular seed app: v<span app-version></span></div>
-
+-->
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
-  <script src="bower_components/jquery/dist/jquery.js"</script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"</script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/select2/select2.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="app.js"></script>
+  <script src="labels.js"></script>
   <script src="views/view1/view1.js"></script>
   <script src="views/view2/view2.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
+
+  <script>
+    // $.getJSON('labels.json', function(data) {
+      console.log("test")
+      console.log(labelsForSelect)
+      // var formattedData = [];
+      // for (var i = 0; i < data.length; i++) {
+      //   var cuiLabel = data[i].split("\t");
+      //   var cui = cuiLabel[0];
+      //   var label = cuiLabel[1];
+      //   formattedData.push({id: cui, text: label});
+      // }
+
+      // console.log(formattedData)
+
+      $("#searchQuery").select2({
+        placeholder: "Choose medical concepts to search patients",
+        minimumInputLength: 1,
+        multiple: true,
+        data: [{id: 1, text: "12345"}]
+      });
+    // })
+  </script>
 </body>
 </html>
