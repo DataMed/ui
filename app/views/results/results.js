@@ -27,7 +27,7 @@ app.controller('ResultsController', [function($scope) {
   self.search = function() {
     var cuis = $("#searchQuery").select2("val");
     $.ajax({
-      url: "http://198.199.104.222:9200/medhack/_search",
+      url: "https://co1f4s43:8f76usbx40mwcy87@azalea-4609986.us-east-1.bonsai.io:443/medhack/documents/_search",
       data: {q: cuis.join("+")},
       dataType: 'json',
       success: function(data) {
@@ -40,7 +40,7 @@ app.controller('ResultsController', [function($scope) {
       }
     });
     $.ajax({
-      url: "http://198.199.104.222:9200/terms/_search",
+      url: "https://co1f4s43:8f76usbx40mwcy87@azalea-4609986.us-east-1.bonsai.io:443/medhack/related/_search",
       data: {q: cuis.join("+"), size: 500},
       dataType: 'json',
       success: function(data) {
